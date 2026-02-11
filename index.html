@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Google Sign-In Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Firebase Google Sign-In Demo</h1>
+            
+            <!-- Sign In Section -->
+            <div id="signInSection" class="section">
+                <p>Click the button below to sign in with Google</p>
+                <button id="signInBtn" class="google-btn">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+                    Sign in with Google
+                </button>
+            </div>
+
+            <!-- User Profile Section (hidden initially) -->
+            <div id="userSection" class="section hidden">
+                <div class="profile">
+                    <img id="userPhoto" src="" alt="User photo" class="profile-photo">
+                    <div class="user-info">
+                        <h2 id="userName"></h2>
+                        <p id="userEmail"></p>
+                    </div>
+                </div>
+                <button id="signOutBtn" class="sign-out-btn">Sign Out</button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingSection" class="section hidden">
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
