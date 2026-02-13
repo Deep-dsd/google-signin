@@ -1,15 +1,14 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
-// Your Firebase configuration
-// TODO: Replace with your own Firebase config from Firebase Console
+// Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCje2eiMJMQXbZbzW-pAN-CYvzjyPJHSfM",
-  authDomain: "signin-55c30.firebaseapp.com",
-  projectId: "signin-55c30",
-  storageBucket: "signin-55c30.firebasestorage.app",
-  messagingSenderId: "852583231326",
-  appId: "1:852583231326:web:bea3e9bece7541c82d29cf"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 // Initialize Firebase
@@ -17,7 +16,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// Get DOM elements
+// DOM elements
 const signInBtn = document.getElementById('signInBtn');
 const signOutBtn = document.getElementById('signOutBtn');
 const signInSection = document.getElementById('signInSection');
@@ -26,18 +25,18 @@ const loadingSection = document.getElementById('loadingSection');
 const userName = document.getElementById('userName');
 const userEmail = document.getElementById('userEmail');
 const userPhoto = document.getElementById('userPhoto');
+const blobBg = document.querySelector('.blob-bg');
+const waveBg = document.querySelector('.wave-bg');
 
 // Sign in with Google
 signInBtn.addEventListener('click', async () => {
     try {
         showLoading();
         const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        console.log('User signed in:', user);
-        // UI will be updated by onAuthStateChanged
+        console.log('User signed in:', result.user);
     } catch (error) {
-        console.error('Error during sign in:', error);
-        alert('Failed to sign in: ' + error.message);
+        console.error('Sign in error:', error);
+        alert('Failed to sign in. Please try again.');
         showSignIn();
     }
 });
@@ -47,20 +46,17 @@ signOutBtn.addEventListener('click', async () => {
     try {
         await signOut(auth);
         console.log('User signed out');
-        // UI will be updated by onAuthStateChanged
     } catch (error) {
-        console.error('Error during sign out:', error);
-        alert('Failed to sign out: ' + error.message);
+        console.error('Sign out error:', error);
+        alert('Failed to sign out. Please try again.');
     }
 });
 
-// Listen for authentication state changes
+// Auth state observer
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // User is signed in
         displayUserProfile(user);
     } else {
-        // User is signed out
         showSignIn();
     }
 });
@@ -69,11 +65,25 @@ onAuthStateChanged(auth, (user) => {
 function displayUserProfile(user) {
     userName.textContent = user.displayName || 'No name';
     userEmail.textContent = user.email || 'No email';
-    userPhoto.src = user.photoURL || 'https://via.placeholder.com/80';
+    
+    // Handle profile photo with fallback
+    if (user.photoURL) {
+        userPhoto.src = user.photoURL;
+        userPhoto.onerror = function() {
+            // Fallback to UI Avatars if Google photo fails to load
+            this.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User') + '&size=88&background=e8697a&color=fff&bold=true';
+        };
+    } else {
+        userPhoto.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User') + '&size=88&background=e8697a&color=fff&bold=true';
+    }
     
     signInSection.classList.add('hidden');
     loadingSection.classList.add('hidden');
     userSection.classList.remove('hidden');
+    
+    // Switch to wave background
+    blobBg.classList.add('hidden');
+    waveBg.classList.remove('hidden');
 }
 
 // Show sign in screen
@@ -81,6 +91,10 @@ function showSignIn() {
     signInSection.classList.remove('hidden');
     userSection.classList.add('hidden');
     loadingSection.classList.add('hidden');
+    
+    // Switch to blob background
+    blobBg.classList.remove('hidden');
+    waveBg.classList.add('hidden');
 }
 
 // Show loading screen
