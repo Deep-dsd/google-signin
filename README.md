@@ -60,8 +60,9 @@ Since this uses ES6 modules, you need to run it through a local server:
 
 **Using Python:**
 ```bash
-python3 -m http.server 5500
+python3 -m http.server 5500 -b localhost
 ```
+- Then open your browser to [Local Server](http://localhost:5500/)
 
 **Using VS Code:**
 1. Install the "Live Server" extension
